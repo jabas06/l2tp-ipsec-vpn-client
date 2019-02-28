@@ -22,7 +22,7 @@ Edit ipsec.conf:
 
     sudo nano /etc/ipsec.conf
 
-Paste the following and save the file (replace n.n.n.n with your VPN Server Address):
+Replace the file content with the following and save the file (replace n.n.n.n with your VPN Server Address):
 
     config setup
 
@@ -51,7 +51,7 @@ Edit ipsec.secrets:
 
     sudo nano /etc/ipsec.secrets
 
-Paste the following and save the file (replace your_pre_shared_key with your PSK value):
+Replace the file content with the following and save the file (replace your_pre_shared_key with your PSK value):
 
     : PSK "your_pre_shared_key"
 
@@ -61,7 +61,7 @@ Edit xl2tpd.conf:
 
     sudo nano /etc/xl2tpd/xl2tpd.conf
 
-Paste the following and save the file (replace n.n.n.n with your VPN Server Address):
+Replace the file content with the following and save the file (replace n.n.n.n with your VPN Server Address):
 
     [lac myVPN]
     ; set this to the ip address of your vpn server
@@ -74,7 +74,7 @@ Edit /etc/ppp/options.l2tpd.client:
 
     sudo nano /etc/ppp/options.l2tpd.client
 
-Paste the following and save the file (replace your_user_name and your_password with your VPN credentials):
+Replace the file content with the following and save the file (replace your_user_name and your_password with your VPN credentials):
 
     ipcp-accept-local
     ipcp-accept-remote
@@ -102,11 +102,11 @@ Start the ipsec and l2tp connection:
     sudo service strongswan restart
     sudo service xl2tpd restart
     sudo service ipsec restart
-    sleep 7
+    sleep 8
     sudo ipsec up L2TP-PSK
-    sleep 7
+    sleep 8
     sudo bash -c 'echo "c myVPN" > /var/run/xl2tpd/l2tp-control'
-    sleep 7
+    sleep 8
     ifconfig
 
 Check the output. You should now see a new interface ppp0. Interface ppp0 is needed to continue to the next step.
