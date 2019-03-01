@@ -61,7 +61,7 @@ Edit xl2tpd.conf:
 
     sudo nano /etc/xl2tpd/xl2tpd.conf
 
-Replace the file content with the following and save the file (replace n.n.n.n with your VPN Server Address):
+Append the following to the file and save it (replace n.n.n.n with your VPN Server Address):
 
     [lac myVPN]
     ; set this to the ip address of your vpn server
@@ -95,7 +95,7 @@ Replace the file content with the following and save the file (replace your_user
 
 ## Connect
 
-Start the ipsec and l2tp connection:
+Run the following command each time you can to start the ipsec and l2tp connection:
 
     sudo mkdir -p /var/run/xl2tpd
     sudo touch /var/run/xl2tpd/l2tp-control
@@ -116,6 +116,20 @@ Check the output. You should now see a new interface ppp0. Interface ppp0 is nee
 Routing traffic to an IP address in your internal network. Replace x.x.x.x with the addres you wish to communicate with through the tunnel device:
 
     sudo ip route add x.x.x.x via $(ip address show dev ppp0 | grep -Po '(?<=peer )(\b([0-9]{1,3}\.){3}[0-9]{1,3}\b)') dev ppp0
+
+## Error: Unable to resolve host on EC2 instances
+
+If you did run the `route` command on an EC2 instance and got the error `"unable to resolve host <ip-x-x-x-x>: Resource temporarily unavailable"`, do the following and then rerun the commands from the Connect and Router sections.
+
+Copy the hostname, from the error message, which will contain the private IP address in the form `ip-x-x-x-x`. For instance `ip-172-31-26-197`
+
+Open the hosts file
+
+    sudo nano /etc/hosts
+
+Add a new entry within the hosts file to include the hostname:
+
+    172.31.29.26 ip-172-31-29-26
 
 ## Test
 
