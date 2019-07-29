@@ -1,6 +1,6 @@
 # l2tp-ipsec-vpn-client
 
-Configure Ubuntu/Debian VPN clients using the command line.
+Configure a Linux VPN client using the command line.
 
 You need the following:
 
@@ -13,8 +13,19 @@ You need the following:
 
 Install the following packages:
 
+### Ubuntu & Debian
+
     sudo apt-get update
-    sudo apt-get install -y strongswan xl2tpd
+    sudo apt-get -y install strongswan xl2tpd
+
+### CentOS & RHEL
+
+    yum -y install epel-release
+    yum --enablerepo=epel -y install strongswan xl2tpd
+
+### Fedora
+
+    yum -y install strongswan xl2tpd
 
 ## Configure StrongSwan
 
@@ -54,6 +65,13 @@ Edit ipsec.secrets:
 Replace the file content with the following and save the file (replace your_pre_shared_key with your PSK value):
 
     : PSK "your_pre_shared_key"
+
+Additionaly, run the following **only if you are using CentOS/RHEL or Fedora**:
+
+    mv /etc/strongswan/ipsec.conf /etc/strongswan/ipsec.conf.old 2>/dev/null
+    mv /etc/strongswan/ipsec.secrets /etc/strongswan/ipsec.secrets.old 2>/dev/null
+    ln -s /etc/ipsec.conf /etc/strongswan/ipsec.conf
+    ln -s /etc/ipsec.secrets /etc/strongswan/ipsec.secrets
 
 ## Configure xl2tpd
 
@@ -97,6 +115,7 @@ Replace the file content with the following and save the file (replace your_user
 
 Run the following command each time you can to start the ipsec and l2tp connection:
 
+### Ubuntu & Debian
     sudo mkdir -p /var/run/xl2tpd
     sudo touch /var/run/xl2tpd/l2tp-control
     sudo service strongswan restart
@@ -104,6 +123,18 @@ Run the following command each time you can to start the ipsec and l2tp connecti
     sudo service ipsec restart
     sleep 8
     sudo ipsec up L2TP-PSK
+    sleep 8
+    sudo bash -c 'echo "c myVPN" > /var/run/xl2tpd/l2tp-control'
+    sleep 8
+    ifconfig
+
+### CentOS/RHEL & Fedora
+    sudo mkdir -p /var/run/xl2tpd
+    sudo touch /var/run/xl2tpd/l2tp-control
+    sudo service strongswan restart
+    sudo service xl2tpd restart
+    sleep 8
+    sudo strongswan up L2TP-PSK
     sleep 8
     sudo bash -c 'echo "c myVPN" > /var/run/xl2tpd/l2tp-control'
     sleep 8
@@ -136,6 +167,20 @@ Add a new entry within the hosts file to include the hostname:
 The VPN connection is now complete. Verify that your traffic is being routed properly. Repalce x.x.x.x with the addres you wish to communicate with through the tunnel device:
 
     ping x.x.x.x
+
+## Disconnect
+
+To disconnect run the following:
+
+### Ubuntu & Debian
+
+    sudo bash -c 'echo "d myVPN" > /var/run/xl2tpd/l2tp-control'
+    ipsec down L2TP-PSK
+
+### CentOS/RHEL & Fedora
+
+    sudo bash -c 'echo "d myVPN" > /var/run/xl2tpd/l2tp-control'
+    sudo strongswan down L2TP-PSK
 
 ## Debugging
 
