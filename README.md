@@ -33,7 +33,7 @@ Edit ipsec.conf:
 
     sudo nano /etc/ipsec.conf
 
-Replace the file content with the following and save the file (replace n.n.n.n with your VPN Server Address):
+Replace the file content with the following (replace `n.n.n.n` with your VPN Server Address):
 
     config setup
 
@@ -62,7 +62,7 @@ Edit ipsec.secrets:
 
     sudo nano /etc/ipsec.secrets
 
-Replace the file content with the following and save the file (replace your_pre_shared_key with your PSK value):
+Replace the file content with the following (replace `your_pre_shared_key` with your PSK value):
 
     : PSK "your_pre_shared_key"
 
@@ -79,7 +79,7 @@ Edit xl2tpd.conf:
 
     sudo nano /etc/xl2tpd/xl2tpd.conf
 
-Append the following to the file and save it (replace n.n.n.n with your VPN Server Address):
+Append the following to the file (replace n.n.n.n with your VPN Server Address):
 
     [lac myVPN]
     ; set this to the ip address of your vpn server
@@ -92,7 +92,7 @@ Edit /etc/ppp/options.l2tpd.client:
 
     sudo nano /etc/ppp/options.l2tpd.client
 
-Replace the file content with the following and save the file (replace your_user_name and your_password with your VPN credentials):
+Replace the file content with the following (replace `your_user_name` and `your_password` with your VPN credentials):
 
     ipcp-accept-local
     ipcp-accept-remote
@@ -113,7 +113,7 @@ Replace the file content with the following and save the file (replace your_user
 
 ## Connect
 
-Run the following command each time you can to start the ipsec and l2tp connection:
+Run the following command each time you want to start the ipsec and l2tp connection:
 
 ### Ubuntu & Debian
     sudo mkdir -p /var/run/xl2tpd
@@ -144,7 +144,7 @@ Check the output. You should now see a new interface ppp0. Interface ppp0 is nee
 
 ## Route
 
-Routing traffic to an IP address in your internal network. Replace x.x.x.x with the addres you wish to communicate with through the tunnel device:
+Routing traffic to an IP address in your internal network. Replace `x.x.x.x` with the addres you wish to communicate with through the tunnel device:
 
     sudo ip route add x.x.x.x via $(ip address show dev ppp0 | grep -Po '(?<=peer )(\b([0-9]{1,3}\.){3}[0-9]{1,3}\b)') dev ppp0
 
